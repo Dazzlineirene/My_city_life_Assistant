@@ -1,0 +1,54 @@
+#“My City Life Assistant”
+#A Python app that helps anyone understand what’s happening in their city today using an API.
+
+import requests
+import pandas as pd
+
+base_url = "https://api.openweathermap.org/data/2.5/weather"
+api_key = "cbb6d75434d453aede8f2a759de06ce0"
+
+def city_life_assistance():
+    username = input("Enter your username: ") 
+    city = input("Enter the name of your city: ")
+
+    params = {
+        "q": city,
+        "appid": api_key,
+        "units": "metric"
+    }
+
+    response = requests.get(base_url, params=params)
+
+    if response.status_code != 200:
+        print("City not found. Can you try again")
+        return
+
+    data = response.json()
+
+    temp = data["main"]["temp"]
+    weather = data["weather"][0]["description"]
+    wind_speed = data["wind"]["speed"]
+
+    print(f"\nHello {username} ")
+    print(f"Weather in {city}: {temp}°C, {weather}. Wind: {wind_speed} km/h")
+
+    if temp <= 9:
+        jacket = "Heavy jacket needed"
+    elif temp <= 19:
+        jacket = "Light jacket recommended"
+    else:
+        jacket = "No jacket needed"
+
+    if "rain" in weather.lower():
+        rain_msg = "Bring an umbrella"
+    else:
+        rain_msg = "No rain expected"
+
+    if wind_speed >= 15:
+        print("It's windy Be careful!")
+
+    print(jacket)
+    print(rain_msg)
+
+
+city_life_assistance()
